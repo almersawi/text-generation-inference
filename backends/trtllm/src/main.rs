@@ -254,6 +254,7 @@ async fn main() -> Result<(), TensorRtLlmBackendError> {
         executor_worker,
         usage_stats,
         payload_limit,
+        served_model_name,
     } = args;
 
     // Launch Tokio runtime
@@ -339,6 +340,7 @@ async fn main() -> Result<(), TensorRtLlmBackendError> {
                 max_client_batch_size,
                 usage_stats,
                 payload_limit,
+                served_model_name,
             )
             .await?;
             Ok(())

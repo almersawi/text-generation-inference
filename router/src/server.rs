@@ -171,10 +171,10 @@ responses(
 async fn openai_get_model_info(info: Extension<Info>) -> Json<ModelsInfo> {
     Json(ModelsInfo {
         data: vec![ModelInfo {
-            id: info.0.model_id.clone(),
+            id: info.0.served_model_name.clone(),
             object: "model".to_string(),
             created: 0, // TODO: determine how to get this
-            owned_by: info.0.model_id.clone(),
+            owned_by: "text-generation-inference",
         }],
         ..Default::default()
     })
@@ -1684,6 +1684,7 @@ pub async fn run(
     max_client_batch_size: usize,
     usage_stats_level: usage_stats::UsageStatsLevel,
     payload_limit: usize,
+    served_model_name: Option<String>,
 ) -> Result<(), WebServerError> {
     // CORS allowed origins
     // map to go inside the option and then map to parse from String to HeaderValue
@@ -1861,7 +1862,9 @@ pub async fn run(
         model_id: tokenizer_name.to_string(),
         sha: None,
         pipeline_tag: None,
+        served_model_name: None,
     });
+    model_info.served_model_name = served_model_name;
 
     let processor_config = processor_config_filename
         .and_then(HubProcessorConfig::from_file)
@@ -2220,8 +2223,15 @@ async fn start(
         .allow_origin(allow_origin);
 
     // Endpoint info
+    let served_model_name = if model_info.served_model_name.is_empty() {
+        model_info.model_id.clone()
+    } else {
+        model_info.served_model_name
+    };
+
     let info = Info {
         model_id: model_info.model_id,
+        served_model_name: served_model_name,
         model_sha: model_info.sha,
         // model_dtype: shard_info.dtype,
         // model_device_type: shard_info.device_type,

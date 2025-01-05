@@ -112,6 +112,7 @@ impl<'a> TokenizerTrait for PyTokenizer<'a> {
 pub struct HubModelInfo {
     #[serde(rename(deserialize = "id"))]
     pub model_id: String,
+    pub served_model_name: Option<String>,
     pub sha: Option<String>,
     pub pipeline_tag: Option<String>,
 }
@@ -221,6 +222,8 @@ pub struct Info {
     /// Model info
     #[schema(example = "bigscience/blomm-560m")]
     pub model_id: String,
+    #[schema(example = "bigscience/blomm-560m")]
+    pub served_model_name: String,
     #[schema(nullable = true, example = "e985a63cdc139290c5f700ff1929f0b5942cced2")]
     pub model_sha: Option<String>,
     // #[schema(example = "torch.float16")]

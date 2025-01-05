@@ -559,6 +559,15 @@ struct Args {
     #[clap(default_value = "bigscience/bloom-560m", long, env)]
     model_id: String,
 
+    /// The name of the model to be loaded and served.
+    /// This value can override the `model_id` specified in the `/v1/models` endpoint.
+    /// It is particularly useful when the `model_id` refers to a local directory containing the model files,
+    /// allowing for flexibility in specifying the model to be served.
+    /// If not provided, no default model is loaded, and the value remains `None`.
+    /// This value can also be provided via the `--served-model-name` command-line argument
+    #[clap(long, env)]
+    served_model_name: Option<String>,
+
     /// The actual revision of the model if you're referring to a model
     /// on the hub. You can use a specific commit id or a branch like `refs/pr/2`.
     #[clap(long, env)]

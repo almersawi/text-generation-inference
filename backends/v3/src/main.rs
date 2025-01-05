@@ -117,6 +117,7 @@ async fn main() -> Result<(), RouterError> {
         max_client_batch_size,
         usage_stats,
         payload_limit,
+        served_model_name,
     } = args;
 
     if let Some(Commands::PrintSchema) = command {
@@ -214,6 +215,7 @@ async fn main() -> Result<(), RouterError> {
         max_client_batch_size,
         usage_stats,
         payload_limit,
+        served_model_name,
     )
     .await?;
     Ok(())
